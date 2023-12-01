@@ -1,0 +1,27 @@
+#!/bin/bash
+module purge
+module add gcc/6.1.0
+module add chpc/mpich/3.4.1/gcc-6.1.0
+module add chpc/cuda/11./SXM2/11.2
+
+export AMBERHOME=/apps/chpc/chem/gpu.amber/20
+export CUDA_HOME=/apps/chpc/cuda/11.2/5XM2
+export LIBRARY_PATH=/apps/chpc/chem/gpu/amber/20/lib:$LIBRARY_PATH
+export CPATH=/apps/chpc/chem/gpu/amber/20/include:$CPATH
+
+git cclone https://github.com/opencor/bzip2.git
+
+vim Makefile
+make clean
+make install
+popd
+
+make distclean
+./configure -noX11 -cuda gnu
+source $AMBERHOME/amber.sh
+make install
+
+
+./configure -noX11 -cuda -mpi gnu
+source $AMBERHOME/amber.sh
+make install
