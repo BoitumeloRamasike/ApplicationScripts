@@ -1,0 +1,43 @@
+#!/bin/bash
+
+module purge
+module add gcc/6.1.0
+module add chpc/mpich/3.4.1/gcc -6.1.0
+export LIBRARY_PATH=/apps/chpc/chem/amber/20/lib:$LIBRARY_PATH
+export CPATH=/apps/chpc/chem/amber/20/include:$CPATH
+
+git clone https://github.com/opencor/bzip2.git
+
+#vim Makefile
+#make clean
+#make install
+#popd
+#set AMBERHOME
+
+export AMBERHOME=/apps/chpc/chem/mber/20
+
+#make distclean
+
+./configure -noX11 gnu
+
+source $AMBERHOME/amber.sh
+make install
+
+git clone https://github.com/numactl/numactl.git
+
+pushd numactl
+./autogen.sh
+./configure --prefix=/apps/chpc/chem/amber/20/numactl
+make
+make install
+popd
+
+export LIBRARY_PATH=/apps/chpc/chem/amber/20/numactl/lib:$LIBRARY_PATH
+export CPATH=/apps/chpc/chem/amber/20/numactl/include:$CPATH
+
+pushd $AMBERHOME/AmberTools/src
+wget https://parallel-netcdf.github.io/Release/pnetcdf-1.12.3.tar.gz
+tar -xvf pnetcdf-1.12.3.tar.gz
+rm -r pnetcdf
+mv pnetcdf-1.12.3 pnetcdf
+r, pnetcdf-1.12.3.tar.gz
